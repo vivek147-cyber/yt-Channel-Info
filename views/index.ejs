@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Currency Converter in Javascript</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+      <div class="container">
+        <br>
+        <br>
+          <h1 class="text-center">Youtube Channel Info App</h1>
+          <form id="form">
+              <div class="form-group">
+                  <label for="channelidname">Youtube Channel Name or ID</label>
+                  <input type="text" required placeholder="Enter Channel Name or ID" id="channelnameid" class="form-control">
+              </div>
+              <div class="form-group">
+                  <button id="button" class="btn btn-danger btn-block">
+                      Get Channel Info
+                  </button>
+              </div>
+          </form>
+        <div id="result"></div>
+      </div>
+</body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script>
+      var result
+      $("#form").submit(function(e){
+          e.preventDefault()
+
+          $("#result").empty()
+
+          $("#button").text("Please Wait Fetching Channel Info")
+
+          $("#button").prop("disabled","true")
+
+          var name = $("#channelnameid").val()
+          
+          name = name.trim()
+
+          name = name.split(" ").join("");
+
+          $.ajax({
+              method:"POST",
+              url:"/getchannelinfo",
+              data:{channelname:name},
+              success:function(data){
+                console.log(data.stats)
+
+                $("#button").text("Get Channel Info")
+
+                $("#button").removeAttr("disabled")
+
+                $("#channelnameid").val("")
+
+                
+
+                result = `
+                  
+                <div class="conatiner">
+                   <br>
+                   <center>
+                   <img class="img-rounded" src="${data.stats.authorThumbnails[2].url}"/>
+                   <br>
+                   <h1>${data.stats.author}</h1>
+                   <br>
+                   <a target="_blank" class="btn btn-danger" href="${data.stats.authorUrl}">Visit Channel</a>
+                   <br>
+                   <span>Subscribers: ${data.stats.subscriberText} </span>
+                   <br>
+
+                   </center>
+                  </div>
+                
+                `
+                $("#result").append(result)
+              }
+
+          })
+
+
+      })
+  </script>
+
+<script>
+  var result
+  $("#form").submit(function(e){
+      e.preventDefault()
+
+      $("#result").empty()
+
+      $("#button").text("Please Wait Fetching Channel Info")
+
+      $("#button").prop("disabled","true")
+
+      var name = $("#channelnameid").val()
+      
+      name = name.trim()
+
+      name = name.split(" ").join("");
+
+      $.ajax({
+          method:"POST",
+          url:"/getvideo",
+          data:{channelname:name},
+          success:function(data){
+            console.log(data.stats)
+
+            $("#button").text("Get Channel Info")
+
+            $("#button").removeAttr("disabled")
+
+            $("#channelnameid").val("")
+
+            result = `
+            
+            <br>
+            <h1>Latest Videos</h1>
+            <table class="table table-striped">
+<thead>
+  <tr>
+    <th>Name</th>
+    <th>Image</th>
+    <th>URL</th>
+    <th>Views</th>
+    <th>Published</th>
+    
+  </tr>
+</thead>
+<tbody>
+  
+  
+  <tr>
+    
+    <td>${data.stats.items[0].title}</td>
+    <td><img class="img-rounded" src="${data.stats.items[0].videoThumbnails[0].url}"/></td>
+    <td><a target="_blank" class="btn btn-danger" href="https://www.youtube.com/watch?v=${data.stats.items[0].videoId}">Go to Channel</a></td>
+    <td>${data.stats.items[0].viewCountText}</td>
+    <td>${data.stats.items[0].publishedText}</td>
+ 
+  
+    
+  </tr>
+
+  <tr>
+    
+    <td>${data.stats.items[1].title}</td>
+    <td><img class="img-rounded" src="${data.stats.items[1].videoThumbnails[1].url}"/></td>
+    <td><a target="_blank" class="btn btn-danger" href="https://www.youtube.com/watch?v=${data.stats.items[1].videoId}">Go to Channel</a></td>
+    <td>${data.stats.items[1].viewCountText}</td>
+    <td>${data.stats.items[1].publishedText}</td>
+ 
+  
+    
+  </tr>
+
+  <tr>
+    
+    <td>${data.stats.items[2].title}</td>
+    <td><img class="img-rounded" src="${data.stats.items[2].videoThumbnails[2].url}"/></td>
+    <td><a target="_blank" class="btn btn-danger" href="https://www.youtube.com/watch?v=${data.stats.items[2].videoId}">Go to Channel</a></td>
+    <td>${data.stats.items[2].viewCountText}</td>
+    <td>${data.stats.items[2].publishedText}</td>
+ 
+  
+    
+  </tr>
+
+</tbody>
+</table>     
+            `
+            $("#result").append(result)
+          }
+
+      })
+
+
+  })
+</script>
+</html>
